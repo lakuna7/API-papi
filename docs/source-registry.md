@@ -9,7 +9,14 @@ This registry contains official/public source families that have passed user-age
 | FDA/openfda GitHub | U.S. FDA | Official technical/source-genealogy reference for pipelines, schemas, upstream sources and API behavior | ADOPTED TECHNICAL REFERENCE | 2026-09-27 |
 | RxNav / RxNorm | U.S. National Library of Medicine | NDC↔RxCUI, concept hierarchy, terminology, RxClass enrichment and historical concept status | ADOPTED SOURCE FAMILY | 2026-09-27 |
 | DailyMed | U.S. National Library of Medicine | SPL/label identity, packaging, SetID/version history and validation | ADOPTED | 2026-09-27 |
-| CMS / Medicare pharma data | CMS | Part D formulary/access/utilization/spending and Part B payment-limit/ASP/HCPCS data families | ADOPTED DISCOVERY FAMILY | 2026-09-27 |
+| Part D Formulary / Pharmacy Network PUF | CMS | Plan formulary, tier/PA/ST/QL, indication coverage, beneficiary cost and pharmacy network | ADOPTED | 2026-09-27 |
+| Part D Quarterly Formulary / Pricing SPUF | CMS | Part D access/network plus plan-level drug unit-cost information | ADOPTED | 2026-09-27 |
+| Medicare Part D Spending by Drug | CMS | Annual drug/manufacturer spending and utilization summary | ADOPTED | 2026-09-27 |
+| Medicare Quarterly Part D Spending by Drug | CMS | Preliminary periodically refreshed Part D spending/utilization periods | ADOPTED | 2026-09-27 |
+| Medicare Part B Spending by Drug | CMS | Annual HCPCS-native spending/utilization summary | ADOPTED | 2026-09-27 |
+| Medicare Quarterly Part B Spending by Drug | CMS | Preliminary periodically refreshed HCPCS-native spending/utilization | ADOPTED | 2026-09-27 |
+| Part B Drug Payment Limit / NDC-HCPCS Crosswalk | CMS | Quarterly Part B payment facts and official NDC↔HCPCS bridge | ADOPTED | 2026-09-27 |
+| HCPCS quarterly code files | CMS | HCPCS billing-code identity/descriptor reference | ADOPTED REFERENCE | 2026-09-27 |
 | Medicaid drug data | CMS / Medicaid.gov | NADAC, SDUD, MDRP product data, FUL and related public drug-pricing/utilization datasets | ADOPTED DISCOVERY FAMILY | 2026-09-27 |
 
 ## Evidence rule
