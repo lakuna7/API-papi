@@ -1,75 +1,57 @@
 # CMS / Medicaid Pharmaceutical Source Family
 
-Status: ADOPTED AS DISCOVERY FAMILY
+Status: ADOPTED SOURCE FAMILY
 Owners: Centers for Medicare & Medicaid Services / Medicaid.gov
 Last reviewed: 2026-09-27
 
-Individual datasets require live validation and source contracts before implementation.
+## Current validation state
 
-## Medicare Part D — market access / formulary
+Detailed live-validated CMS contracts now exist for:
 
-### Monthly Prescription Drug Plan Formulary and Pharmacy Network Information
-Potential roles:
-- plan and contract attributes;
-- formulary coverage by NDC;
-- tier;
-- prior authorization;
-- step therapy;
-- quantity limits;
-- indication-based coverage where supplied;
-- pharmacy network and pharmacy NPI;
-- beneficiary cost-sharing-related plan data.
+- `cms-part-d.md` — Part D formulary/access, annual spending and preliminary quarterly-refreshed spending;
+- `cms-part-b.md` — Part B annual/preliminary spending, quarterly payment limits, NDC-HCPCS crosswalks and HCPCS reference.
 
-Native time context: monthly snapshot/release.
+Medicaid sources remain a discovery family until each receives its dedicated live source contract.
 
-### Quarterly Prescription Drug Plan Formulary, Pharmacy Network, and Pricing Information
-Includes similar plan/formulary/network information and additionally provides plan-level average monthly unit costs for formulary Part D drugs.
+## Medicare Part D
 
-Native time context: quarterly.
+Adopted source roles:
 
-Important: monthly and quarterly products are not interchangeable merely because they overlap.
+- Monthly Prescription Drug Plan Formulary and Pharmacy Network Information — monthly formulary/access/network snapshot.
+- Quarterly Prescription Drug Plan Formulary, Pharmacy Network, and Pricing Information — quarterly snapshot plus plan-level drug pricing.
+- Medicare Part D Spending by Drug — annual drug/manufacturer program-summary spending and utilization.
+- Medicare Quarterly Part D Spending by Drug — preliminary, periodically refreshed spending periods.
+- Part D Prescriber datasets — provider/drug utilization dimension; dedicated validation later.
 
-### Formulary Reference File
-Official CMS reference files for the Part D formulary environment. Investigate as a reference/crosswalk source rather than assuming it has plan-level coverage.
+Important semantics:
 
-### MA / Part D contract and enrollment data
-Monthly plan/contract enrollment data can potentially provide plan-size weights for access/formulary analysis.
+- CMS formulary NDC is a proxy NDC associated with the drug product, not evidence of an exact dispensed package.
+- RxCUI is an important semantic bridge between Part D formulary data and the project's RxNorm layer.
+- update frequency, represented reporting period, contract year and publication date are different concepts.
+- the preliminary spending product may contain cumulative labels such as `2025 (Q1-Q4)`; do not model it as one independent calendar-quarter fact simply because the product is refreshed quarterly.
 
-## Medicare Part D — utilization / spending
+## Medicare Part B
 
-Candidate official datasets:
-- Part D Prescribers by Provider and Drug;
-- Part D Prescribers by Geography and Drug;
-- Part D Prescribers by Provider;
-- Medicare Part D Spending by Drug.
+Adopted source roles:
 
-Potential outputs:
-- fills/prescriptions;
-- drug cost;
-- prescriber/provider NPI relationships;
-- geography;
-- beneficiary/spending metrics where published.
+- Medicare Part B Spending by Drug — annual HCPCS-native spending/utilization.
+- Medicare Quarterly Part B Spending by Drug — preliminary, periodically refreshed HCPCS-native spending/utilization.
+- Medicare Part B Drug Payment Limit Files — quarterly payment facts.
+- CMS NDC-HCPCS Crosswalk — official package-NDC to HCPCS billing-code bridge.
+- Quarterly HCPCS code files — billing-code identity/reference context.
 
-These datasets have their own aggregation and suppression rules and must not be projected to NDC/package grain without an explicit method.
+Important semantics:
 
-## Medicare Part B — drug pricing / reimbursement
+- HCPCS is the native billing identifier for Part B facts.
+- NDC-to-HCPCS mapping should use the official quarterly CMS crosswalk rather than brand-name inference.
+- the current CMS crosswalk publication can contain distinct ASP, AWP, OPPS and PrEP crosswalk files; preserve payment context.
+- package quantity, HCPCS dosage and billing units are separate unit concepts.
+- presence or absence in a Part B payment-limit/crosswalk file is not a Medicare coverage determination.
 
-### Medicare Part B Drug Payment Limit File
-Quarterly public files containing payment limits for Part B drugs and biologicals.
-
-Most separately payable drugs are associated with ASP-based methodologies, but current files can also contain other payment methodologies. The published payment limit should therefore be treated as the native CMS fact; do not blindly label every payment limit as ASP.
-
-### NDC–HCPCS crosswalk
-Quarterly public crosswalk associated with the Part B payment-limit files.
-
-This is a key official bridge between package/product NDCs and HCPCS billing codes.
-
-### HCPCS quarterly files
-Official quarterly HCPCS code-system updates. Useful for HCPCS identity/description/status context.
-
-## Medicaid — product / reimbursement / utilization
+## Medicaid
 
 ### NADAC
+
 National Average Drug Acquisition Cost reference data.
 
 Native characteristics:
@@ -86,7 +68,8 @@ Potential roles:
 - reimbursement/economic analyses.
 
 ### State Drug Utilization Data (SDUD)
-State-reported utilization for covered outpatient drugs.
+
+State-reported covered-outpatient-drug utilization.
 
 Native characteristics include:
 - state;
@@ -106,9 +89,10 @@ Potential roles:
 - longitudinal utilization/spend.
 
 ### Medicaid Drug Rebate Program product data
-Quarterly product snapshots plus weekly newly reported active covered outpatient drug files.
 
-Important fields can include:
+Quarterly product snapshots plus weekly newly reported active covered-outpatient-drug files.
+
+Potentially important fields include:
 - NDC segments;
 - labeler;
 - product/FDA name;
@@ -116,14 +100,13 @@ Important fields can include:
 - FDA application;
 - market/coverage dates;
 - unit type and package size;
-- therapeutic-equivalence and other program indicators.
+- therapeutic-equivalence and program indicators.
 
-This is potentially valuable as an independent official product/coverage dimension and timing source.
+### ACA Federal Upper Limits
 
-### ACA Federal Upper Limits (FUL)
-Official Medicaid drug-pricing/payment reference source based on applicable AMP-derived methodology for multiple-source drugs.
+Official Medicaid drug pricing/payment reference source for applicable multiple-source drugs.
 
-Investigate cadence, native identifier grain, and historical availability during its dedicated source cycle.
+Dedicated validation still required.
 
 ## Access
 
@@ -134,17 +117,18 @@ CMS and Medicaid sources may expose combinations of:
 - manual downloads;
 - reference files.
 
-All viable access routes should be recorded, including reproducible manual extraction.
+All viable public access routes should be retained, including reproducible manual extraction.
 
 ## Key rule
 
-CMS/Medicaid datasets are a family, not one homogeneous source.
+CMS/Medicaid is a source family, not a homogeneous dataset.
 
-For each dataset we must separately establish:
-- native identifier grain;
-- native time grain;
-- reporting lag;
+For every source preserve:
+- identifier grain;
+- represented time period;
+- release/update cadence;
+- reporting lag and maturity;
 - suppression;
 - units;
-- population covered;
-- whether amounts are price, payment limit, acquisition cost, reimbursement, spending or another economic concept.
+- covered population;
+- economic meaning: acquisition cost, reimbursement, spending, payment limit, plan cost or another concept.
