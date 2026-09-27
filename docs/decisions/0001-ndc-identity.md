@@ -83,7 +83,6 @@ A lower-grain match must never be presented as package-level evidence.
 - openFDA NDC API — preferred live API/query representation of FDA NDC Directory data.
 - RxNorm / RxNav — NDC-to-RxCUI and terminology crosswalk layer, not the identity authority.
 - DailyMed — SPL/label identity, packaging, SetID/version history, and cross-validation layer.
-- fabkury/n2c — implementation reference / possible selective reuse under MIT; not a system dependency or identity authority.
 
 ## Principle
 
